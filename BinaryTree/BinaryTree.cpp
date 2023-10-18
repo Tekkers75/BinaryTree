@@ -15,7 +15,7 @@ int main()
     int count = 0;
 
 
-    TreeNode<int>* root = new TreeNode<int>(47, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(47, nullptr, nullptr, nullptr);
     Add(root, 60);
     Add(root, 30);
     Add(root, 20);
@@ -86,8 +86,31 @@ int main()
     cout << endl;
     BFS(root);
 
+    //for (const auto& item : root) {
+    //    std::cout << item << " ";
+    //}
+    
+    BinSTree<int> root1(4);
+    root1.Insret(5);
+    root1.Insret(7);
+    root1.Insret(9);
+    root1.Insret(2);
+    root1.Insret(1);
+
+    
 
 
+  
+
+
+    for (auto it = root1.begin(); it != root1.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    root1.ListSize();
+
+    
 
 
     return 0;

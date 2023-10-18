@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <cassert>
 #include "BinaryTree.h"
+#include "AbstIterator.h"
 
 using namespace std;
 
@@ -15,7 +16,6 @@ private:
     // указатели левого и правого дочерних узлов
     TreeNode<T>* root;
     TreeNode<T>* curr;
-
     int size;
 
 public:
@@ -24,10 +24,11 @@ public:
     //  онструктор с параметрами
     BinSTree(const T& item) : root(nullptr), curr(nullptr), size(0)
     {
-        Insert(item);
+        Insret(item);
     }
 
     //  онструктор копировани€
+    // ѕри копировании из одного копируетс€ в другой, и остаютс€ оба
     BinSTree(const BinSTree& other)
     {
         //  опируем размер
@@ -38,7 +39,8 @@ public:
         this->curr = this->root;
     }
 
-    // ќператор присваивани€ копировани€
+    // ќператор присваивани€ копировани€ 
+    // —оздает копию дерева и присваивает ему другие данные того же типа
     BinSTree& operator=(const BinSTree& other)
     {
         if (this != &other) {
@@ -53,6 +55,7 @@ public:
         return *this;
     }
     //  онструктор перемещени€
+    // ѕри перемещении дерево копируетс€, а тот что скопирован, уничтожаетс€
     BinSTree(BinSTree&& other)
     {
         // ѕеремещаем указатель на корень
@@ -78,6 +81,83 @@ public:
     bool ListEmpty()const;
     int ListSize()const;
 
+
+    template<typename T>
+    class Iterator : public AbstractIterator<T> {
+    private:
+        TreeNode<T>* current;
+
+
+    public:
+        Iterator(TreeNode<T>* node) {
+            current = node;
+        }
+
+        T& operator*() override {
+            // ¬озвращает ссылку на данные текущего узла
+            return current->data;
+        }
+
+        AbstractIterator<T>& operator++() override {
+            // ѕереход к следующему узлу в пор€дке возрастани€
+            if (current != nullptr) {
+                if (current->right != nullptr) {
+                    // ≈сли есть правый подузел, идем вправо, затем все влево
+                    current = current->right;
+                    while (current->left != nullptr) {
+                        current = current->left;
+                    }
+                }
+                else {
+                    // ≈сли нет правого подузла, поднимаемс€ вверх по родител€м,
+                    // пока не найдем первый узел с которого мы свернули влево.
+                    TreeNode<T>* parent = current->parent;
+                    while (parent != nullptr && current == parent->right) {
+                        current = parent;
+                        parent = parent->parent;
+                    }
+                    current = parent;
+                }
+            }
+            return *this;
+        }
+
+        AbstractIterator<T>& operator++(int) override {
+            // ѕостфиксный инкремент (a++)
+            Iterator<T> temp = *this;
+            ++(*this);
+            return temp;
+        }
+
+        bool operator==(const AbstractIterator<T>& other) override {
+            // —равнение итераторов на равенство
+            const Iterator* otherIterator = dynamic_cast<const Iterator*>(&other);
+            return otherIterator != nullptr && current == otherIterator->current;
+        }
+
+        bool operator!=(const AbstractIterator<T>& other) override {
+            // —равнение итераторов на неравенство
+            return !(*this == other);
+        }
+    };
+
+    Iterator<T> begin() {
+        TreeNode<T>* node = root;
+        while (node != nullptr && node->left != nullptr) {
+            node = node->left;
+        }
+        return Iterator<T>(node);
+    }
+
+    Iterator<T> end() {
+        // ¬озвращает итератор, указывающий на конец списка (nullptr)
+        return Iterator<T>(nullptr);
+    }
+
+
+
+
+
 };
 //проверка на пустое дерево
 template<class T>
@@ -102,7 +182,7 @@ int BinSTree<T>::Find(const T& item) {
 // ¬ставка нового элемента
 template<class T>
 void BinSTree<T>::Insret(const T& item) {
-    root = AddNode(root, item);
+    root = Add(root, item);
     size++;
 }
 

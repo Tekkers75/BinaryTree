@@ -20,7 +20,7 @@ void TreеRandom(TreeNode<T>* root, int numNodes, T minValue, T maxValue) {
 template <class T>
 void TestDel()
 {
-    TreeNode<int>* root = new TreeNode<int>(47, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(47, nullptr, nullptr,nullptr);
     Add(root, 60);
     Add(root, 30);
     Add(root, 20);
@@ -75,7 +75,7 @@ void TestDel()
 //Функция для создания дерева с конкретными значениями в данных узлов
 template <class T>
 TreeNode<T>* CreateTree() {
-    TreeNode<int>* root = new TreeNode<int>(35, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(35, nullptr, nullptr, nullptr);
     Add(root, 25);
     Add(root, 7);
     Add(root, 16);
@@ -93,7 +93,7 @@ TreeNode<T>* CreateTree() {
 void TestCopyTree()
 {
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root = new TreeNode<int>(25, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(25, nullptr, nullptr, nullptr);
     TreеRandom(root, 10, 10, 50);
     //Копирование дерева
     TreeNode<int>* copiedRoot = CopyTree(root);
@@ -107,7 +107,7 @@ void TestCopyTree()
 
 
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root1 = new TreeNode<int>(15, nullptr, nullptr);
+    TreeNode<int>* root1 = new TreeNode<int>(15, nullptr, nullptr, nullptr);
     TreеRandom(root, 5, 5, 20);
     //Копирование дерева
     TreeNode<int>* copiedRoot1 = CopyTree(root1);
@@ -205,7 +205,7 @@ void TestSearch() {
 //тестирование функции добавления
 void TestAdd() {
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root = new TreeNode<int>(40, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(40, nullptr, nullptr, nullptr);
     Add(root, 25);
     Add(root, 70);
     Add(root, 30);
@@ -239,7 +239,7 @@ void TestAdd() {
 //тестирование функции глубины
 void TestDepth() {
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root = new TreeNode<int>(25, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(25, nullptr, nullptr, nullptr);
     TreеRandom(root, 9, 11, 87);
     // Проверяем глубину дерева
     assert(Depth(root) == 3);
@@ -247,7 +247,7 @@ void TestDepth() {
     DeleteTree(root);
 
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root1 = new TreeNode<int>(15, nullptr, nullptr);
+    TreeNode<int>* root1 = new TreeNode<int>(15, nullptr, nullptr, nullptr);
     // Проверяем глубину дерева
     assert(Depth(root1) == 0);
     // Освобождаем память, удаляя дерево
@@ -255,7 +255,7 @@ void TestDepth() {
 
 
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root2 = new TreeNode<int>(23, nullptr, nullptr);
+    TreeNode<int>* root2 = new TreeNode<int>(23, nullptr, nullptr, nullptr);
     TreеRandom(root, 21, 1, 80);
     // Проверяем глубину дерева
     assert(Depth(root2) == 8);
@@ -266,7 +266,7 @@ void TestDepth() {
 //тестирование функции подсчета узлов
 void TestCountNodes() {
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root = new TreeNode<int>(35, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(35, nullptr, nullptr, nullptr);
     TreеRandom(root, 10, 20, 100);
     PrintTree(root, 1);
     // Проверяем количество узлов в дереве
@@ -275,14 +275,14 @@ void TestCountNodes() {
     DeleteTree(root);
 
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root1 = new TreeNode<int>(15, nullptr, nullptr);
+    TreeNode<int>* root1 = new TreeNode<int>(15, nullptr, nullptr, nullptr);
     // Проверяем количество узлов в дереве
     assert(countNode(root1) == 1);
     // Освобождаем память, удаляя дерево
     DeleteTree(root1);
 
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root2 = new TreeNode<int>(40, nullptr, nullptr);
+    TreeNode<int>* root2 = new TreeNode<int>(40, nullptr, nullptr, nullptr);
     TreеRandom(root, 5, 20, 50);
     // Проверяем количество узлов в дереве
     assert(countNode(root2) == 6);
@@ -295,7 +295,7 @@ void TestCountNodes() {
 //тестирование функции подсчета листьев
 void TestCountLeaf() {
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root = new TreeNode<int>(35, nullptr, nullptr);
+    TreeNode<int>* root = new TreeNode<int>(35, nullptr, nullptr, nullptr);
     TreеRandom(root, 10, 10, 50);
     int count = 0;
     CountLeaf(root, count);
@@ -307,7 +307,7 @@ void TestCountLeaf() {
 
 
     // Создаем бинарное дерево для тестирования
-    TreeNode<int>* root2 = new TreeNode<int>(40, nullptr, nullptr);
+    TreeNode<int>* root2 = new TreeNode<int>(40, nullptr, nullptr, nullptr);
     TreеRandom(root, 15, 20, 60);
     int count2 = 0;
     CountLeaf(root2, count2);
