@@ -4,6 +4,9 @@
 #include <cassert>
 #include "BinaryTree.h"
 #include "AbstIterator.h"
+#include <stack>
+
+
 
 using namespace std;
 
@@ -86,75 +89,174 @@ public:
     class Iterator : public AbstractIterator<T> {
     private:
         TreeNode<T>* current;
+        stack<TreeNode<T>*> nodesStack;
 
-
-    public:
-        Iterator(TreeNode<T>* node) {
-            current = node;
+        void pushLeftNodes(TreeNode<T>* node)
+        {
+            while (node != nullptr)
+            {
+                nodesStack.push(node);
+                node = node->left;
+            }
         }
 
-        T& operator*() override {
-            // ¬озвращает ссылку на данные текущего узла
+    public:
+        //Iterator(TreeNode<T>* node) {
+        //    current = node;
+        //}
+
+        //T& operator*() override {
+        //    // ¬озвращает ссылку на данные текущего узла
+        //    return current->data;
+        //}
+
+        //AbstractIterator<T>& operator++() override {
+        //    // ѕереход к следующему узлу в пор€дке возрастани€
+        //    if (current != nullptr) {
+        //        if (current->right != nullptr) {
+        //            // ≈сли есть правый подузел, идем вправо, затем все влево
+        //            current = current->right;
+        //            while (current->left != nullptr) {
+        //                current = current->left;
+        //            }
+        //        }
+        //        else {
+        //            // ≈сли нет правого подузла, поднимаемс€ вверх по родител€м,
+        //            // пока не найдем первый узел с которого мы свернули влево.
+        //            TreeNode<T>* parent = current->parent;
+        //            while (parent != nullptr && current == parent->right) {
+        //                current = parent;
+        //                parent = parent->parent;
+        //            }
+        //            current = parent;
+        //        }
+        //    }
+        //    return *this;
+        //}
+
+
+    //    AbstractIterator<T>& operator++(int) override {
+    //        // ѕостфиксный инкремент (a++)
+    //        Iterator<T> temp = *this;
+    //        ++(*this);
+    //        return temp;
+    //    }
+
+    //    bool operator==(const AbstractIterator<T>& other) override {
+    //        // —равнение итераторов на равенство
+    //        const Iterator* otherIterator = dynamic_cast<const Iterator*>(&other);
+    //        return otherIterator != nullptr && current == otherIterator->current;
+    //    }
+
+    //    bool operator!=(const AbstractIterator<T>& other) override {
+    //        // —равнение итераторов на неравенство
+    //        return !(*this == other);
+    //    }
+    //};
+
+    //Iterator<T> begin() {
+    //    TreeNode<T>* node = root;
+    //    while (node != nullptr && node->left != nullptr) {
+    //        node = node->left;
+    //    }
+    //    return Iterator<T>(node);
+    //}
+
+    //Iterator<T> end() {
+    //    // ¬озвращает итератор, указывающий на конец списка (nullptr)
+    //    return Iterator<T>(nullptr);
+    //}
+
+        Iterator(TreeNode<T>* root)
+        {
+            current = root;
+            while (current != nullptr)
+            {
+                nodesStack.push(current);
+                current = current->left;
+            }
+        }
+
+
+
+
+        T& operator*() override
+        {
             return current->data;
         }
 
-        AbstractIterator<T>& operator++() override {
-            // ѕереход к следующему узлу в пор€дке возрастани€
-            if (current != nullptr) {
-                if (current->right != nullptr) {
-                    // ≈сли есть правый подузел, идем вправо, затем все влево
-                    current = current->right;
-                    while (current->left != nullptr) {
-                        current = current->left;
-                    }
+        //AbstractIterator<T>& operator++() override
+        //{
+        //    if (!nodesStack.empty() || current != nullptr)
+        //    {
+        //        if (current != nullptr)
+        //        {
+        //            current = current->right;
+        //            while (current != nullptr)
+        //            {
+        //                nodesStack.push(current);
+        //                current = current->left;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            current = nodesStack.top();
+        //            nodesStack.pop();
+        //        }
+        //    }
+        //    return *this;
+        //}
+
+        AbstractIterator<T>& operator++() override
+        {
+            if (!nodesStack.empty() || current != nullptr)
+            {
+                if (current != nullptr)
+                {
+                    pushLeftNodes(current->right);
                 }
-                else {
-                    // ≈сли нет правого подузла, поднимаемс€ вверх по родител€м,
-                    // пока не найдем первый узел с которого мы свернули влево.
-                    TreeNode<T>* parent = current->parent;
-                    while (parent != nullptr && current == parent->right) {
-                        current = parent;
-                        parent = parent->parent;
-                    }
-                    current = parent;
+                if (!nodesStack.empty())
+                {
+                    current = nodesStack.top();
+                    nodesStack.pop();
+                }
+                else
+                {
+                    current = nullptr;
                 }
             }
             return *this;
         }
 
-        AbstractIterator<T>& operator++(int) override {
-            // ѕостфиксный инкремент (a++)
-            Iterator<T> temp = *this;
+        AbstractIterator<T>& operator++(int) override
+        {
+            Iterator iterator = *this;
             ++(*this);
-            return temp;
+            return iterator;
         }
 
-        bool operator==(const AbstractIterator<T>& other) override {
-            // —равнение итераторов на равенство
-            const Iterator* otherIterator = dynamic_cast<const Iterator*>(&other);
-            return otherIterator != nullptr && current == otherIterator->current;
+        bool operator==(const AbstractIterator<T>& other) override
+        {
+            const Iterator* pOther = dynamic_cast<const Iterator*>(&other);
+            return (pOther != nullptr && current == pOther->current);
         }
 
-        bool operator!=(const AbstractIterator<T>& other) override {
-            // —равнение итераторов на неравенство
+        bool operator!=(const AbstractIterator<T>& other) override
+        {
             return !(*this == other);
         }
     };
 
-    Iterator<T> begin() {
-        TreeNode<T>* node = root;
-        while (node != nullptr && node->left != nullptr) {
-            node = node->left;
-        }
-        return Iterator<T>(node);
+
+    Iterator<T> begin()
+    {
+        return Iterator<T>(root);
     }
 
-    Iterator<T> end() {
-        // ¬озвращает итератор, указывающий на конец списка (nullptr)
+    Iterator<T> end()
+    {
         return Iterator<T>(nullptr);
     }
-
-
 
 
 
@@ -198,3 +300,4 @@ template<class T>
 int BinSTree<T>::ListSize() const {
     return size;
 }
+

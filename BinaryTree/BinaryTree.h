@@ -40,20 +40,20 @@ struct TreeNode
     TreeNode<T>* left;
     TreeNode<T>* right;
 
-    TreeNode<T>* parent;
+    //TreeNode<T>* parent;
 
     // открытый элемент, допускающий обновление
     T data;
 
     // конструктор инициализирует поля данных и указателей
     // значение NULL соответствует пустому поддереву
-    TreeNode(const T& item, TreeNode<T>* lptr, TreeNode<T>* rptr, TreeNode<T>* pptr)
+    TreeNode(const T& item, TreeNode<T>* lptr, TreeNode<T>* rptr /*, TreeNode<T>* pptr*/)
         //: data(item), left(lptr), right(rptr)
     {
         data = item;
         left = lptr;
         right = rptr;
-        parent = pptr;
+        //parent = pptr;
     }
     // методы доступа к полям указателей
     TreeNode<T>* Left() const { return left; }
@@ -230,7 +230,7 @@ TreeNode<T>* Add(TreeNode<T>* node, const T& aData)
 
     { //создадим ее и зададим в нее данные
 
-        return new TreeNode<T>(aData, nullptr, nullptr, nullptr);
+        return new TreeNode<T>(aData, nullptr, nullptr);
 
     }
 
@@ -440,7 +440,7 @@ TreeNode<T>* CopyTree(TreeNode<T>* node) {
     // Создается новый узел newnode с данными node->data и указателями 
     // на скопированные левое и правое поддеревья(newlptr и newrptr соответственно).
     //Новый узел newnode становится корневым узлом скопированного поддерева.
-    newnode = new TreeNode<int>(node->data, newlptr, newrptr, nullptr);
+    newnode = new TreeNode<int>(node->data, newlptr, newrptr);
     return newnode;
 }
 
