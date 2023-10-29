@@ -391,3 +391,242 @@ void TestMoveConstructor() {
     cout << "Конструктор перемещения тест пройден" << endl;
 }
 
+template<class T>
+//тест вставка
+void TestInsert() {
+    // Создаем объект дерева
+    BinSTree<T> tree;
+    assert(tree.ListSize() == 0);
+    // Вставляем элементы в дерево
+    tree.Insert(5);
+    assert(tree.ListSize() == 1);
+    tree.Insert(3);
+    assert(tree.ListSize() == 2);
+    tree.Insert(7);
+    assert(tree.ListSize() == 3);
+    tree.Insert(2);
+    assert(tree.ListSize() == 4);
+    tree.Insert(4);
+    //перевести в массив и проверить
+        // Проверяем размер дерева
+    assert(tree.ListSize() == 5);
+    cout << "Вставка пройдена" << endl;
+}
+template<class T>
+//тест удаление
+void TestRemove() {
+
+    BinSTree<T> tree;
+
+    // Вставляем элементы в дерево
+    tree.Insert(5);
+    tree.Insert(3);
+    tree.Insert(7);
+    tree.Insert(2);
+    tree.Insert(4);
+    // Удаляем элементы из дерева
+    tree.Delete(5);
+    tree.Delete(2);
+
+    // Проверяем размер дерева после удаления
+    assert(tree.ListSize() == 3);
+    // Получаем размер дерева
+    int treeSize = tree.ListSize();
+
+    // Создаем массив для хранения элементов дерева
+    int* arr = new int[treeSize];
+
+    // Печатаем дерево в массив
+    PrintArr(tree.Curr(), arr, 0);
+
+
+    // Проверяем ожидаемый результат
+    assert(arr[0] == 3);
+    assert(arr[1] == 4);
+    assert(arr[2] == 7);
+
+    // Освобождаем выделенную память
+    delete[] arr;
+    cout << "Удаление тест пройден" << endl;
+}
+template<class T>
+//тест поиск
+void TestFind() {
+
+    BinSTree<T> tree;
+
+    // Вставляем элементы в дерево
+    tree.Insert(5);
+    tree.Insert(3);
+    tree.Insert(7);
+    tree.Insert(2);
+    tree.Insert(4);
+
+    // Проверяем поиск элементов
+    assert(tree.Find(5) == 0);  // Элемент 5 должен быть найден
+    assert(tree.Find(2) == 2);  // Элемент 2 должен быть найден
+    assert(tree.Find(6) == -1); // Элемент 6 не должен быть найден
+    cout << "Поиск тест пройден" << endl;
+}
+
+
+//создаем тестовое бинарное дерево 
+BinSTree<int> CreateTestBST() {
+    // Создаем объект класса BinSTree
+    BinSTree<int> bst;
+
+    bst.Insret(35);
+    bst.Insret(25);
+    bst.Insret(7);
+    bst.Insret(16);
+    bst.Insret(15);
+    bst.Insret(3);
+    bst.Insret(26);
+    bst.Insret(38);
+    bst.Insret(40);
+    bst.Insret(39);
+    bst.Insret(55);
+    return bst;
+}
+
+//создаем тестовое вырожденное влево бинарное дерево 
+BinSTree<int> CreateTestBSTLeft() {
+    // Создаем объект класса BinSearchTree
+    BinSTree<int> bst;
+
+    bst.Insret(27);
+    bst.Insret(25);
+    bst.Insret(17);
+    bst.Insret(16);
+    bst.Insret(10);
+    bst.Insret(9);
+    bst.Insret(6);
+    bst.Insret(4);
+    bst.Insret(2);
+    bst.Insret(1);
+    return bst;
+}
+void TestBSTIterator() {
+    BinSTree<int> bst = CreateTestBST();
+
+    // Получаем итератор начала списка
+    auto it = bst.begin();
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it == 3);
+
+
+    BinSTree<int> bst1 = CreateTestBSTLeft();
+    // Получаем итератор начала списка
+    auto it1 = bst1.begin();
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it1 == 1);
+
+    cout << "Итератор начала BST пройден" << endl;
+}
+void TestBSTDataOperator() {
+    BinSTree<int> bst = CreateTestBST();
+
+    // Получаем итератор начала списка
+    auto it = bst.begin();
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it == 3);
+
+    // Переходим к следующему узлу
+    ++it;
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it == 7);
+    ++it;
+    assert(*it == 15);
+    ++it;
+    assert(*it == 16);
+
+
+    BinSTree<int> bst1 = CreateTestBSTLeft();
+    // Получаем итератор начала списка
+    auto it1 = bst1.begin();
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it1 == 1);
+
+    // Переходим к следующему узлу
+    ++it1;
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it1 == 2);
+    ++it1;
+    assert(*it1 == 4);
+    ++it1;
+    assert(*it1 == 6);
+    cout << "Оператор разыменования пройден" << endl;
+}
+
+// тест инкремента итератора
+void TestIncOperator() {
+    BinSTree<int> bst = CreateTestBST();
+
+    // Получаем итератор начала списка
+    auto it = bst.begin();
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it == 3);
+
+    // Переходим к следующему узлу
+    ++it;
+
+    // Проверяем значение текущего узла через оператор разыменования
+    assert(*it == 7);
+    ++it;
+    assert(*it == 15);
+    ++it;
+    assert(*it == 16);
+    ++it;
+    assert(*it == 25);
+    ++it;
+    assert(*it == 26);
+    ++it;
+    assert(*it == 35);
+    ++it;
+    assert(*it == 38);
+    ++it;
+    assert(*it == 39);
+    ++it;
+    assert(*it == 40);
+    ++it;
+    assert(*it == 55);
+
+    cout << "Оператор разыменования пройден" << endl;
+}
+//тест оператора равенства
+void TestOperatorEqual() {
+    BinSTree<int> bst = CreateTestBST();
+
+    //Получаем итераторы
+    auto it1 = bst.begin();
+    auto it2 = bst.begin();
+
+    // Проверяем, что итераторы равны друг другу с помощью оператора равенства
+    assert(it1 == it2);
+
+
+
+    cout << "Оператор равенства пройден" << endl;
+}
+
+void TestOperatorUnequal() {
+    BinSTree<int> bst = CreateTestBST();
+
+    //Получаем итераторы
+    auto it1 = bst.begin();
+    auto it2 = bst.begin();
+    ++it2;
+    // Проверяем, что итераторы равны друг другу с помощью оператора равенства
+    assert(it1 != it2);
+
+
+
+    cout << "Оператор неравенства пройден" << endl;
+}

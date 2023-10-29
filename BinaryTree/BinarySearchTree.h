@@ -18,14 +18,14 @@ class BinSTree
 private:
     // указатели левого и правого дочерних узлов
     TreeNode<T>* root;
-    TreeNode<T>* curr;
+    TreeNode<T>* current;
     int size;
 
 public:
     //  онструктор по умолчанию
-    BinSTree() : root(nullptr), curr(nullptr), size(0) {}
+    BinSTree() : root(nullptr), current(nullptr), size(0) {}
     //  онструктор с параметрами
-    BinSTree(const T& item) : root(nullptr), curr(nullptr), size(0)
+    BinSTree(const T& item) : root(nullptr), current(nullptr), size(0)
     {
         Insret(item);
     }
@@ -39,7 +39,7 @@ public:
         //  опируем дерево
         this->root = CopyTree(other.root);
         // ”станавливаем указатель на текущий узел в корень
-        this->curr = this->root;
+        this->current = this->root;
     }
 
     // ќператор присваивани€ копировани€ 
@@ -53,7 +53,7 @@ public:
             Clear(this->root); // ќчищаем текущее дерево
             this->root = CopyTree(other.root);
             // ”станавливаем указатель на текущий узел в корень
-            this->curr = this->root;
+            this->current = this->root;
         }
         return *this;
     }
@@ -64,19 +64,19 @@ public:
         // ѕеремещаем указатель на корень
         this->root = other.root;
         // ѕеремещаем указатель на текущий узел
-        this->curr = other.curr;
+        this->current = other.current;
         // ѕеремещаем количество элементов дерева
         this->size = other.size;
 
         //обнул€ем указатели исходного объекта
         other.root = nullptr;
-        other.curr = nullptr;
+        other.current = nullptr;
         other.size = 0;
     }
     // ƒеструктор
     ~BinSTree() { Clear(root); }
 
-    TreeNode<T>* Curr() const { return curr; };
+    TreeNode<T>* Curr() const { return current; };
     int Find(const T& item);
     void Insret(const T& item);
     void Delete(const T& item);
@@ -89,142 +89,61 @@ public:
     class Iterator : public AbstractIterator<T> {
     private:
         TreeNode<T>* current;
-        stack<TreeNode<T>*> nodesStack;
+        stack<TreeNode<T>*> stack;
 
-        void pushLeftNodes(TreeNode<T>* node)
-        {
+
+        //помещение узлов дерева в стек
+        void pushNodesintoStack(TreeNode<T>* node) {
+            //пока узел не равен nullptr
             while (node != nullptr)
             {
-                nodesStack.push(node);
+                //помещаем узлы в стек
+                stack.push(node);
+                //переходим к левому поддереву
                 node = node->left;
             }
         }
 
+
     public:
-        //Iterator(TreeNode<T>* node) {
-        //    current = node;
-        //}
-
-        //T& operator*() override {
-        //    // ¬озвращает ссылку на данные текущего узла
-        //    return current->data;
-        //}
-
-        //AbstractIterator<T>& operator++() override {
-        //    // ѕереход к следующему узлу в пор€дке возрастани€
-        //    if (current != nullptr) {
-        //        if (current->right != nullptr) {
-        //            // ≈сли есть правый подузел, идем вправо, затем все влево
-        //            current = current->right;
-        //            while (current->left != nullptr) {
-        //                current = current->left;
-        //            }
-        //        }
-        //        else {
-        //            // ≈сли нет правого подузла, поднимаемс€ вверх по родител€м,
-        //            // пока не найдем первый узел с которого мы свернули влево.
-        //            TreeNode<T>* parent = current->parent;
-        //            while (parent != nullptr && current == parent->right) {
-        //                current = parent;
-        //                parent = parent->parent;
-        //            }
-        //            current = parent;
-        //        }
-        //    }
-        //    return *this;
-        //}
-
-
-    //    AbstractIterator<T>& operator++(int) override {
-    //        // ѕостфиксный инкремент (a++)
-    //        Iterator<T> temp = *this;
-    //        ++(*this);
-    //        return temp;
-    //    }
-
-    //    bool operator==(const AbstractIterator<T>& other) override {
-    //        // —равнение итераторов на равенство
-    //        const Iterator* otherIterator = dynamic_cast<const Iterator*>(&other);
-    //        return otherIterator != nullptr && current == otherIterator->current;
-    //    }
-
-    //    bool operator!=(const AbstractIterator<T>& other) override {
-    //        // —равнение итераторов на неравенство
-    //        return !(*this == other);
-    //    }
-    //};
-
-    //Iterator<T> begin() {
-    //    TreeNode<T>* node = root;
-    //    while (node != nullptr && node->left != nullptr) {
-    //        node = node->left;
-    //    }
-    //    return Iterator<T>(node);
-    //}
-
-    //Iterator<T> end() {
-    //    // ¬озвращает итератор, указывающий на конец списка (nullptr)
-    //    return Iterator<T>(nullptr);
-    //}
-
-        Iterator(TreeNode<T>* root)
-        {
-            current = root;
-            while (current != nullptr)
-            {
-                nodesStack.push(current);
-                current = current->left;
+        // онструктор
+        Iterator(TreeNode<T>* root) {
+            pushNodesintoStack(root);
+            if (!stack.empty()) {
+                current = stack.top();
+                stack.pop();
             }
+            else
+                current = nullptr;
+
         }
-
-
-
-
+        // ќператор разыменовани€-доступа к данным
         T& operator*() override
         {
             return current->data;
         }
 
-        //AbstractIterator<T>& operator++() override
-        //{
-        //    if (!nodesStack.empty() || current != nullptr)
-        //    {
-        //        if (current != nullptr)
-        //        {
-        //            current = current->right;
-        //            while (current != nullptr)
-        //            {
-        //                nodesStack.push(current);
-        //                current = current->left;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            current = nodesStack.top();
-        //            nodesStack.pop();
-        //        }
-        //    }
-        //    return *this;
-        //}
-
-        AbstractIterator<T>& operator++() override
-        {
-            if (!nodesStack.empty() || current != nullptr)
-            {
-                if (current != nullptr)
-                {
-                    pushLeftNodes(current->right);
-                }
-                if (!nodesStack.empty())
-                {
-                    current = nodesStack.top();
-                    nodesStack.pop();
-                }
-                else
-                {
-                    current = nullptr;
-                }
+     
+        //ќператор инкремента дл€ BST
+        AbstractIterator<T>& operator++() override {
+            //если текущий не равен nullptr
+            if (current->right != nullptr) {
+                //помещаем в стек правое поддерево
+                pushNodesintoStack(current->right);
             }
+            //если стек пустой
+            if (!stack.empty()) {
+                //текущий-вершина стека
+                current = stack.top();
+                //вытащить элемент
+                stack.pop();
+
+            }
+            //иначе текущии = nullptr
+            else {
+                current = nullptr;
+            }
+
             return *this;
         }
 
@@ -234,25 +153,27 @@ public:
             ++(*this);
             return iterator;
         }
-
+        // ќператор равенства
         bool operator==(const AbstractIterator<T>& other) override
         {
             const Iterator* pOther = dynamic_cast<const Iterator*>(&other);
             return (pOther != nullptr && current == pOther->current);
         }
 
+        // ќператор неравенства
         bool operator!=(const AbstractIterator<T>& other) override
         {
             return !(*this == other);
         }
     };
 
-
+    // »тератор начала списка
     Iterator<T> begin()
     {
         return Iterator<T>(root);
     }
 
+    // »тератор конца списка
     Iterator<T> end()
     {
         return Iterator<T>(nullptr);
@@ -261,6 +182,8 @@ public:
 
 
 };
+
+
 //проверка на пустое дерево
 template<class T>
 bool BinSTree<T>::ListEmpty() const {
